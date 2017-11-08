@@ -2,8 +2,15 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
 let repoSchema = mongoose.Schema({
-  // TODO: your schema here!
+  id: Number,
+  name: String,
+  forks: Number,
+  owner_id: Number,
+  owner: String
 });
+
+// can add methods onto the schema model instances, but
+// must do this before compiling below
 
 let Repo = mongoose.model('Repo', repoSchema);
 
