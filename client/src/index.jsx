@@ -14,8 +14,21 @@ class App extends React.Component {
   }
 
   search (term) {
+    // use jQuery's ajax method to send a POST request to /repos
+    // contentType can't be text/plain, or else won't allow a cross origin request
+    let server = 'http://localhost:1128/repos';
+    $.ajax({
+      type: "POST",
+      url: server,
+      data: term,
+      contentType: 'application/json', 
+      success: (data) => {
+        console.log('success!');
+        console.log(data);
+      },
+      dataType: 'json'
+    });
     console.log(`${term} was searched`);
-    // TODO
   }
 
   render () {
