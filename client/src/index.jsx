@@ -8,27 +8,43 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      repos: []
+      repos: [],
+      server: 'http://localhost:1128/repos'
     }
-
   }
 
-  search (term) {
+  componentDidMount() {
+    this.getTop25.call(this);
+  }
+
+  getTop25 () {
+    $.ajax({
+      type: 'GET',
+      url: this.state.server,
+      dataType: 'json',
+      success: (data) => {
+        this.setState({
+          repos: data
+        });
+      },
+      error: (error) => {
+        console.error('yo, unable to get');
+      }
+    });
+  }
+
+  search(term) {
     // use jQuery's ajax method to send a POST request to /repos
     // contentType can't be text/plain, or else won't allow a cross origin request
-    let server = 'http://localhost:1128/repos';
     $.ajax({
-      type: "POST",
-      url: server,
+      type: 'POST',
+      url: this.state.server,
       data: JSON.stringify({ term: term }),
       contentType: 'application/json', 
-      success: (data) => {
-        console.log('success!');
-        console.log(data);
-      },
       dataType: 'json'
     });
     console.log(`${term} was searched`);
+    // this.displayTop25.call(this);
   }
 
   render () {
