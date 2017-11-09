@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 let app = express();
 
+app.set('port', (process.env.PORT || 5000));
+
 app.use(express.static(__dirname + '/../client/dist'));
 
 // parse incoming requests to collect search term from request data
@@ -28,9 +30,7 @@ app.get('/repos', function (req, res) {
   });
 });
 
-let port = 1128;
-
-app.listen(port, function() {
-  console.log(`listening on port ${port}`);
+app.listen(app.get('port'), function() {
+  console.log(`listening on port ${app.get('port')`);
 });
 
