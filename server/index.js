@@ -19,7 +19,7 @@ app.post('/repos', function (req, res) {
   let user = req.body.term;
   getReposByUsername(user, db.save)
 
-  res.send('user repo info received');
+  res.send('search term received');
 });
 
 app.get('/repos', function (req, res) {

@@ -2,9 +2,9 @@ const request = require('request');
 const config = require('../config.js');
 
 let getReposByUsername = (username, callback) => {
-
+  console.log('inside git');
   let options = {
-    url: 'http://api.github.com/repos/' + username + '/repos',
+    url: 'https://api.github.com/users/' + username + '/repos',
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${config.TOKEN}`,
@@ -12,14 +12,13 @@ let getReposByUsername = (username, callback) => {
     }
   };
 
-  let onResponse = (error, response, body, callback) => {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-      callback(info);
-    }
-  }
-
-  request(options, onResponse);
+  request.get(options, (err, response, body) => {
+      err && console.error(err);
+      console.log('successful get from git');
+      // console.log(body);
+      let data = JSON.parse(body);
+      callback(data);
+    });
 }
 
 module.exports.getReposByUsername = getReposByUsername;
