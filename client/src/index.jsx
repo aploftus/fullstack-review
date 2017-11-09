@@ -20,7 +20,7 @@ class App extends React.Component {
     $.ajax({
       type: "POST",
       url: server,
-      data: term,
+      data: JSON.stringify({ term: term }),
       contentType: 'application/json', 
       success: (data) => {
         console.log('success!');
