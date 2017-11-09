@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
 mongoose.connect('mongodb://localhost/fetcher', {
   useMongoClient: true,
 });
@@ -23,38 +25,20 @@ let save = (repos) => {
   // This function should save a repo or repos to the MongoDB
   for (var i = 0; i < repos.length; i++) {
     let repo = repos[i];
-    let repoEntry = new Repo({
-      id: repo.id,
+    let repoEntry = new Repo({ id: repo.id });
+    let params = {
       name: repo.name,
       forks: repo.forks,
       owner_id: repo.owner.id,
       owner: repo.owner.login
-    });
+    };
 
-    // document-save returns a promise
-    repoEntry.save((err, repoEntry) => {
-      // if the record already exists
-      if (err) {
-        // update the record rather than drop it
-        throw repoEntry;
-      }
-      console.log('repoEntry ', repoEntry.name, ' has been saved');
-    })
-    .catch(({id, name, forks, owner_id, owner}) => {
-      let newParams = {
-        name: name,
-        forks: forks,
-        owner_id: owner_id,
-        owner: owner
-      };
-      // when we update, we update the "table", right?
-      Repo.update({id: id}, newParams, (err, raw) => {
-        if (err) {
-          console.error('unable to update repo record');
-        }
-        console.log('raw response from mongo is ', raw);
-      })
-    })
+    // upsert allows us to create a record if one doesn't already exist
+    Repo.findOneAndUpdate({id: repoEntry.id}, params, { upsert: true }, (err, doc) => {
+      err && console.error('sorry, insert/update unsuccessful');
+      console.log('repoEntry ', repo.name, ' has been saved');
+    });
+    
   }
 }
 
