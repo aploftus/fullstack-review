@@ -21,7 +21,7 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (repos) => {
+let save = (repos, callback) => {
   // This function should save a repo or repos to the MongoDB
   for (var i = 0; i < repos.length; i++) {
     let repo = repos[i];
@@ -38,8 +38,8 @@ let save = (repos) => {
       err && console.error('sorry, insert/update unsuccessful');
       console.log('repoEntry ', repo.name, ' has been saved');
     });
-    
   }
+  callback();
 };
 
 let getTop25 = (callback) => {

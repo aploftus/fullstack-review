@@ -14,10 +14,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getTop25.call(this);
+    this.retrieveTop25.call(this);
   }
 
-  getTop25 () {
+  retrieveTop25() {
     $.ajax({
       type: 'GET',
       url: this.state.server,
@@ -40,14 +40,18 @@ class App extends React.Component {
       type: 'POST',
       url: this.state.server,
       data: JSON.stringify({ term: term }),
-      contentType: 'application/json', 
-      dataType: 'json'
+      contentType: 'application/json',
+      // don't specify the wrong dataType for the return data. If you do,
+      // your success function won't run.
+      success: (data) => { 
+        console.log('RESPONSE DATA ', data);
+        this.retrieveTop25.call(this);
+      }
     });
     console.log(`${term} was searched`);
-    // this.displayTop25.call(this);
   }
 
-  render () {
+  render() {
     return (<div>
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>

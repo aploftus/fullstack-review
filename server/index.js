@@ -13,8 +13,11 @@ app.use(bodyParser.json());
 app.post('/repos', function (req, res) {
   // req.body gets parsed using bodyParser
   let user = req.body.term;
-  getReposByUsername(user, db.save);
-  res.send('search term received');
+  getReposByUsername(user, (data) => {
+    db.save(data, () => {
+      res.send('repo data saved');
+    });
+  });
 });
 
 app.get('/repos', function (req, res) {
