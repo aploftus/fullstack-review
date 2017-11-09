@@ -40,6 +40,16 @@ let save = (repos) => {
     });
     
   }
+};
+
+let getTop25 = (callback) => {
+  Repo
+    .find()
+    .limit(25)
+    .sort({ forks: -1 })
+    .select({ name: 1, owner: 1, forks: 1 })
+    .exec(callback);
 }
 
 module.exports.save = save;
+module.exports.getTop25 = getTop25;

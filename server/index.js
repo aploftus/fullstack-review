@@ -11,20 +11,18 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
-  //in this route, you'll use your getReposByUsername function
-  // to fetch the specified user's Github repos, then use your
-  // save function to store the repo information in database.
-
   // req.body gets parsed using bodyParser
   let user = req.body.term;
-  getReposByUsername(user, db.save)
-
+  getReposByUsername(user, db.save);
   res.send('search term received');
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+  // query database
+  db.getTop25((err, data) => {
+    err && console.error(err);
+    res.send(JSON.stringify(data));
+  });
 });
 
 let port = 1128;
